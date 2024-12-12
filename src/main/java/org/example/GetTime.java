@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+
 public class GetTime {
 
     final static String PREFIX = "Es isch ";
@@ -101,6 +103,62 @@ public class GetTime {
         sb.append(" gsi");
 
         return sb.toString();
+    }
+
+    public static boolean phraseFitsInSuperphrase(String superphrase, String phrase) {
+        //System.out.println(String.format("is %s part of %s", phrase, superphrase));
+        var phraseArray = phrase.split("\\s+"); // split by whitespace
+        var superphraseArray = superphrase.split("\\s+"); // split by whitespace
+
+        var superphraseIndex = 0;
+        outerloop:
+        for (int checkIndex = 0; checkIndex < phraseArray.length; checkIndex++) {
+            //System.out.println("Checking: " + phraseArray[checkIndex]);
+            for (int i = superphraseIndex; i < superphraseArray.length; i++) {
+                //System.out.println("index: " + i + " " + superphraseArray[i]);
+                if (phraseArray[checkIndex].equals(superphraseArray[i])) {
+                    //System.out.println(phraseArray[checkIndex] + " found at position " + i);
+                    superphraseIndex = i + 1;
+                    continue outerloop;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public static String merge (String string1, String string2) {
+        var string1Array = string1.split("\\s+");
+        var string2Array = string2.split("\\s+");
+        var mergedString = new ArrayList<String>();
+        for ( var i = 0; i < Math.max (string1Array.length, string2Array.length); i++ ) {
+            //var s1 = i < string1Array.length ? string1Array[i] : "";
+            //var s2 = i < string2Array.length ? string2Array[i] : "";
+            //if ( s1.equals(s2)) {
+            //    mergedString.add( s1 );
+            //} else {
+            //    mergedString.add( s1 );
+            //    mergedString.add( s2 );
+            //}
+            if ( i < string1Array.length ) {
+                mergedString.add(string1Array[i]);
+            }
+            if ( i < string2Array.length ) {
+                mergedString.add(string2Array[i]);
+            }
+        }
+
+        //remove duplicate words
+        var duplicatesRemoved = new ArrayList<String>();
+        String priorString = "";
+        for ( var i=0; i<mergedString.size(); i++ ) {
+            if ( ! priorString.equals(mergedString.get(i))) {
+                duplicatesRemoved.add(mergedString.get(i));
+            }
+            priorString = mergedString.get(i);
+        }
+
+        return String.join(" ", duplicatesRemoved);
     }
 }
 

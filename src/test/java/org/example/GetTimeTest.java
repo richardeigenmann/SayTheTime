@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static org.example.GetTime.phraseFitsInSuperphrase;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GetTimeTest {
@@ -56,27 +57,7 @@ class GetTimeTest {
 
     }
 
-    private boolean phraseFitsInSuperphrase(String superphrase, String phrase) {
-        //System.out.println(String.format("is %s part of %s", phrase, superphrase));
-        var phraseArray = phrase.split("\\s+"); // split by whitespace
-        var superphraseArray = superphrase.split("\\s+"); // split by whitespace
 
-        var superphraseIndex = 0;
-        outerloop:
-        for (int checkIndex = 0; checkIndex < phraseArray.length; checkIndex++) {
-            //System.out.println("Checking: " + phraseArray[checkIndex]);
-            for (int i = superphraseIndex; i < superphraseArray.length; i++) {
-                //System.out.println("index: " + i + " " + superphraseArray[i]);
-                if (phraseArray[checkIndex].equals(superphraseArray[i])) {
-                    //System.out.println(phraseArray[checkIndex] + " found at position " + i);
-                    superphraseIndex = i + 1;
-                    continue outerloop;
-                }
-            }
-            return false;
-        }
-        return true;
-    }
 
     @Test
     void testPhraseThatFitsInSuperPhrase() {
@@ -88,4 +69,17 @@ class GetTimeTest {
         assertFalse(phraseFitsInSuperphrase("It is was rainy snowy", "It is sunny"));
     }
 
+    @Test
+    void testMerge1() {
+        assertEquals("It's raining cats dogs", GetTime.merge("It's raining cats", "It's raining dogs"));
+    }
+    @Test
+    void testMerge2() {
+        assertEquals("It's raining hailing cats dogs", GetTime.merge("It's raining cats", "It's hailing dogs"));
+    }
+
+    @Test
+    void testMerge3() {
+        assertEquals("It's Cute raining cats", GetTime.merge("It's raining cats", "Cute cats"));
+    }
 }
