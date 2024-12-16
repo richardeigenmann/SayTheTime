@@ -1,21 +1,59 @@
 package org.example;
 
+import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static org.example.GetTime.justifyText;
 
 public class Main {
     public static void main(String[] args) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        // Schedule the task to run every 60 seconds
+        Runnable task = () -> {
+            LocalTime now = LocalTime.now();
+            int hour = now.getHour();
+            int minute = now.getMinute();
+            System.out.println("");
+            printTime(hour, minute);
+
+        };
+
+        scheduler.scheduleAtFixedRate(task, 0, 60, TimeUnit.SECONDS);
+
+        // Add a shutdown hook to gracefully terminate the scheduler when the program exits
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutting down scheduler...");
+            scheduler.shutdown();
+        }));
+    }
+
+    public static void printAll() {
         for (int h = 0; h <= 23; h++) {
             for (int m = 0; m <= 59; m++) {
-                String time = String.format("%02d:%02d", h, m);
-                printTime(GetTime.getTime(time));
-                System.out.println("");
+                printTime(h,m);
             }
         }
     }
 
-    private static void printTime(String phrase) {
-        var superphraseArray = GetTime.getSuperPhrase().split("\\s+");
+    private static void printTime(int h, int m) {
+        //var superPhrase = GetTime.getReducedSuperPhrase();
+        var superPhrase = GetTime.getSuperPhraseStatic();
+        int width = 50;
+        String time = String.format("%02d:%02d", h, m);
+        var timeInWords = GetTime.getTime(time);
+        var formattedTime = formatTime(timeInWords, superPhrase);
+        List<String> justifiedText = justifyText(formattedTime, width);
+        for (String line : justifiedText) {
+            System.out.println(line);
+        }
+    }
+    private static void printTime(String phrase, String superPhrase) {
+        var superphraseArray = superPhrase.split("\\s+");
         var phraseArray = phrase.split("\\s+");
 
         var phraseIndex = 0;
@@ -27,6 +65,23 @@ public class Main {
                 printWhite(superphraseArray[i]);
             }
         }
+    }
+
+    private static String formatTime(String phrase, String superPhrase) {
+        var superphraseArray = superPhrase.split("\\s+");
+        var phraseArray = phrase.split("\\s+");
+        var sb = new StringBuffer("");
+
+        var phraseIndex = 0;
+        for ( var i = 0; i < superphraseArray.length; i++ ) {
+            if (phraseIndex < phraseArray.length && superphraseArray[i].equals(phraseArray[phraseIndex])) {
+                sb.append(wrapRed(superphraseArray[i]));
+                phraseIndex++;
+            } else {
+                sb.append(wrapWhite(superphraseArray[i]));
+            }
+        }
+        return sb.toString();
     }
 
 
@@ -54,8 +109,16 @@ public class Main {
         System.out.print(RED + text + " " + RESET);
     }
 
+    public static String wrapRed(String text) {
+        return(RED + text + " " + RESET);
+    }
+
     public static void printWhite(String text) {
         System.out.print(WHITE + text + " " + RESET);
+    }
+
+    public static String wrapWhite(String text) {
+        return(WHITE + text + " " + RESET);
     }
 
 }

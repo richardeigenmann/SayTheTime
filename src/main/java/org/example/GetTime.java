@@ -1,6 +1,9 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class GetTime {
 
@@ -105,6 +108,10 @@ public class GetTime {
         return sb.toString();
     }
 
+    public static String getSuperPhraseStatic() {
+        return "Es isch fascht zäh viertel foif zwänzg vor über halbi zwölfi füfezwänzg ab elfi zäni nüni achti sibni sächsi am Abig Mittag foifi vieri drü zwei eis am Morge Mitternacht gsi";
+    }
+
     public static boolean phraseFitsInSuperphrase(String superphrase, String phrase) {
         //System.out.println(String.format("is %s part of %s", phrase, superphrase));
         var phraseArray = phrase.split("\\s+"); // split by whitespace
@@ -132,14 +139,6 @@ public class GetTime {
         var string2Array = string2.split("\\s+");
         var mergedString = new ArrayList<String>();
         for ( var i = 0; i < Math.max (string1Array.length, string2Array.length); i++ ) {
-            //var s1 = i < string1Array.length ? string1Array[i] : "";
-            //var s2 = i < string2Array.length ? string2Array[i] : "";
-            //if ( s1.equals(s2)) {
-            //    mergedString.add( s1 );
-            //} else {
-            //    mergedString.add( s1 );
-            //    mergedString.add( s2 );
-            //}
             if ( i < string1Array.length ) {
                 mergedString.add(string1Array[i]);
             }
@@ -159,6 +158,137 @@ public class GetTime {
         }
 
         return String.join(" ", duplicatesRemoved);
+    }
+
+    public static String constructSuperPhrase(ArrayList<String> allTimes) {
+        final String[] superPhrase = {""};
+        allTimes.forEach( timeInWords -> superPhrase[0] = GetTime.merge(timeInWords, superPhrase[0]));
+        return superPhrase[0];
+    }
+
+
+    public static ArrayList<String> getAllTimes() {
+        var allTimes = new ArrayList<String>();
+        for (int h = 0; h <= 23; h++) {
+            for (int m = 0; m <= 59; m++) {
+                String time = String.format("%02d:%02d", h, m);
+                allTimes.add( GetTime.getTime(time));
+            }
+        }
+        return allTimes;
+    }
+
+    public static String removeNthWord(String phrase, int n) {
+        // Split the phrase into words
+        String[] words = phrase.split("\\s+");
+
+        // If n is out of bounds, return the original phrase
+        if (n < 0 || n >= words.length) {
+            return phrase;
+        }
+
+        // Build a new phrase without the n-th word
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < words.length; i++) {
+            if (i != n) {
+                if (result.length() > 0) {
+                    result.append(" ");
+                }
+                result.append(words[i]);
+            }
+        }
+
+        return result.toString();
+    }
+
+
+    public static Optional<String> testIfAWordCanBeOmitted(List<String>allTimes, String superPhrase) {
+        var superPhraseArray = superPhrase.split("\\s+");
+        var words = superPhraseArray.length;
+
+        for ( int i=0; i < words; i++) {
+            System.out.println("Testing if I can remove word "+i);
+            var testSuperPhrase = removeNthWord(superPhrase,i);
+            var allMatch = allTimes.stream().allMatch( time -> phraseFitsInSuperphrase(testSuperPhrase, time));
+            if (allMatch) {
+                return Optional.of(testSuperPhrase);
+            }
+        }
+        return Optional.empty();
+
+    }
+
+    public static String getReducedSuperPhrase() {
+        var allTimes = getAllTimes();
+        var superPhrase = GetTime.constructSuperPhrase(allTimes);
+        var superPhraseArray = superPhrase.split("\\s+");
+        var words = superPhraseArray.length;
+
+        for ( int i=0; i < words; i++) {
+            System.out.println("Pass  "+i);
+            var returnValue = testIfAWordCanBeOmitted(allTimes, superPhrase);
+            if ( returnValue.isPresent() ) {
+                superPhrase = returnValue.get();
+            } else {
+                return superPhrase;
+            }
+        }
+        return superPhrase; // should never arrive here
+    }
+
+
+    public static List<String> justifyText(String input, int width) {
+        String[] words = input.split("\\s+");
+        List<String> lines = new ArrayList<>();
+        List<String> currentLine = new ArrayList<>();
+        int currentLength = 0;
+
+        for (String word : words) {
+            int wordLength = visibleLength(word);
+            if (currentLength + wordLength + currentLine.size() > width) {
+                lines.add(justifyLine(currentLine, width));
+                currentLine.clear();
+                currentLength = 0;
+            }
+            currentLine.add(word);
+            currentLength += wordLength;
+        }
+
+        // Handle the last line (left-aligned)
+        if (!currentLine.isEmpty()) {
+            lines.add(String.join(" ", currentLine));
+        }
+
+        return lines;
+    }
+
+    private static String justifyLine(List<String> words, int width) {
+        if (words.size() == 1) {
+            return padRight(words.get(0), width);
+        }
+
+        int totalSpaces = width - words.stream().mapToInt(GetTime::visibleLength).sum();
+        int spaceBetweenWords = totalSpaces / (words.size() - 1);
+        int extraSpaces = totalSpaces % (words.size() - 1);
+
+        StringBuilder justifiedLine = new StringBuilder();
+        for (int i = 0; i < words.size(); i++) {
+            justifiedLine.append(words.get(i));
+            if (i < words.size() - 1) {
+                int spaces = spaceBetweenWords + (i < extraSpaces ? 1 : 0);
+                justifiedLine.append(" ".repeat(spaces));
+            }
+        }
+        return justifiedLine.toString();
+    }
+
+    private static int visibleLength(String word) {
+        // Remove ANSI control sequences using regex and calculate visible length
+        return word.replaceAll("\u001B\\[[;\\d]*m", "").length();
+    }
+
+    private static String padRight(String word, int width) {
+        return word + " ".repeat(width - visibleLength(word));
     }
 }
 
