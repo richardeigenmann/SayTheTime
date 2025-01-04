@@ -1,15 +1,62 @@
 package org.richinet;
 
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 import static org.richinet.GetTime.justifyText;
 
-public class CommandLineInterpreter {
-    public static void main(String[] args) {
+
+@Command(name = "SayTheTime", mixinStandardHelpOptions = true, version = "SayTheTime 0.1",
+        description = "Outputs the time in words on STDOUT")
+public class CommandLineInterpreter implements Callable<Integer> {
+
+    @Parameters(index = "0", description = "The time in 24h notation to say. I.e. 13:15", arity = "0..1")
+    private Time suppliedTime;
+
+    @Override
+    public Integer call() throws Exception { // your business logic goes here...
+
+        int hour;
+        int minute;
+
+        if (suppliedTime == null) {
+            var now = LocalTime.now();
+            hour = now.getHour();
+            minute = now.getMinute();
+         } else {
+            hour = suppliedTime.getHours();
+            minute = suppliedTime.getMinutes();
+        }
+        var timeInWords = GetTime.getTime(hour, minute);
+        System.out.println(timeInWords);
+
+        return 0;
+    }
+
+    private static String getNowAsString() {
+        var now = LocalTime.now();
+        var hour = now.getHour();
+        var minute = now.getMinute();
+        String time = String.format("%02d:%02d", hour, minute);
+        return time;
+    }
+
+    public static void main(String... args) {
+        int exitCode = new CommandLine(new CommandLineInterpreter()).execute(args);
+        System.exit(exitCode);
+
+    }
+
+    public static void repeatPrintout() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         // Schedule the task to run every 60 seconds
@@ -29,6 +76,7 @@ public class CommandLineInterpreter {
             System.out.println("Shutting down scheduler...");
             scheduler.shutdown();
         }));
+
     }
 
     public static void printAll() {

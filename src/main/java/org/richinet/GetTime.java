@@ -16,6 +16,10 @@ public class GetTime {
         var hour = Integer.parseInt(timeSplit[0]);
         var minute = Integer.parseInt(timeSplit[1]);
 
+        return getTime(hour, minute);
+    }
+
+    public static String getTime(int hour, int minute) {
         var sb = new StringBuilder(PREFIX);
 
         if (minute % 5 > 2 && minute % 5 < 5) {
