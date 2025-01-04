@@ -3,14 +3,14 @@ plugins {
     id 'application'
     id "com.github.ben-manes.versions" version "0.51.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
-    id 'org.beryx.jlink' version '3.1.1'
-    id "org.javamodularity.moduleplugin" version "1.8.15"
+    id 'org.beryx.jlink' version '3.1.1' // add jlink packaging support
+    id "org.javamodularity.moduleplugin" version "1.8.15" // add java modularity support
     //id "org.sonarqube" version "5.0.0.4638"
-    id 'jacoco'
-    id "com.github.johnrengelman.shadow"  version "8.1.1"
+    id 'jacoco' // coverage reports
+    id "com.github.johnrengelman.shadow"  version "8.1.1"  // make uber (fat) jar
 }
 
-group = "org.example"
+group = "org.richinet"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -18,14 +18,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.11.3"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation 'info.picocli:picocli:4.7.6'  // for handling command line arguments
+    annotationProcessor 'info.picocli:picocli-codegen:4.7.6'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
 application {
-    mainModule = 'org.example' // name defined in module-info.java
-    mainClass = 'org.example.Main'
+    mainModule = 'org.richinet' // name defined in module-info.java
+    mainClass = 'org.richinet.CommandLineInterpreter'
 }

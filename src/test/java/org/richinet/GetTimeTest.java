@@ -1,4 +1,4 @@
-package org.example;
+package org.richinet;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-import static org.example.GetTime.phraseFitsInSuperphrase;
+import static org.richinet.GetTime.phraseFitsInSuperphrase;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GetTimeTest {

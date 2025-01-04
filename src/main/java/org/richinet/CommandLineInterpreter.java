@@ -1,15 +1,14 @@
-package org.example;
+package org.richinet;
 
 import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
-import static org.example.GetTime.justifyText;
+import static org.richinet.GetTime.justifyText;
 
-public class Main {
+public class CommandLineInterpreter {
     public static void main(String[] args) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -40,6 +39,11 @@ public class Main {
         }
     }
 
+    public static void clearScreen() {
+        // ANSI escape code to clear screen
+        System.out.print("\033[H\033[2J");
+        System.out.flush(); // Ensure output is flushed immediately
+    }
     private static void printTime(int h, int m) {
         //var superPhrase = GetTime.getReducedSuperPhrase();
         var superPhrase = GetTime.getSuperPhraseStatic();
@@ -48,6 +52,7 @@ public class Main {
         var timeInWords = GetTime.getTime(time);
         var formattedTime = formatTime(timeInWords, superPhrase);
         List<String> justifiedText = justifyText(formattedTime, width);
+        clearScreen();
         for (String line : justifiedText) {
             System.out.println(line);
         }

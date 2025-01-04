@@ -1,3 +1,3 @@
-module org.example {
+module org.richinet {
     requires java.base;
 }
