@@ -7,13 +7,13 @@ A JAVA program that says the time in words
 After installing the program, run it on the command line and 
 it will say the current time. Here is a Linux BASH example:
 
-```bash
+```ignorelang
 user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime
 Es isch fascht Mittag
 ```
 
 Or specify the time to say:
-```bash
+```ignorelang
 user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15
 Es isch viertel ab eis
 ```
@@ -22,7 +22,7 @@ Es isch viertel ab eis
 
 On Linux you can install the program cowsay and use that to let the cow say the time:
 
-```bash
+```ignorelang
 user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | cowsay
  ________________________ 
 < Es isch viertel ab eis >
@@ -37,7 +37,7 @@ user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | cowsay
 Cowsay has many options. Check them with `man cowsay` For instance, to have a 
 stoned cow say the time:
 
-```bash
+```ignorelang
 user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | cowsay -s
  ________________________ 
 < Es isch viertel ab eis >
@@ -57,9 +57,9 @@ Alternatively we can also pass the time from `SayTheTime` as an argument to
 the `cowsay` program. We can ask the shell to run a command for us with the
 `$()` syntax (or backtick, which I find less readable) and then take
 the output of that command and pass it as an argument
-tp the `cowsay` program. Here with the ghostbusters 'cow':
+to the `cowsay` program. Here with the ghostbusters 'cow':
 
-```bash
+```ignorelang
 user@computer:~> cowsay -f ghostbusters $(/richi/Src/SayTheTime/build/image/bin/SayTheTime)
  __________________________________ 
 < Es isch foif über halbi eis gsi >
@@ -91,8 +91,6 @@ user@computer:~> cowsay -f ghostbusters $(/richi/Src/SayTheTime/build/image/bin/
 
 Having admired the beautiful Qlocktwo wall clocks made by 
 Biegert & Funk (www.qlocktwo.com ) I felt like doing something similar with words.
-
-![Image of the Qlocktwo clock](https://de.wikipedia.org/wiki/Datei:Qlocktwo_Touch_mit_rotem_Frontcover.JPG)
 
 Side note: check out this cool TCL implementation of the Qlocktwo https://wiki.tcl-lang.org/page/QLOCKTWO+in+Tcl
 
