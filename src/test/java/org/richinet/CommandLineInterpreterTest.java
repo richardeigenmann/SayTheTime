@@ -162,7 +162,7 @@ class CommandLineInterpreterTest {
             String cleanedOutput2 =  cleanedOutput.replaceAll("[ \t\r\n]+$", "");
 
             assertTrue(cleanedOutput2.startsWith("Es isch"), "All messages start with 'Es isch' but we got: " + cleanedOutput2);
-            assertEquals(GetTime.getSuperPhrase(), cleanedOutput2, "Essentially after cleaning the highlighting we should be getting back the superphrase");
+            assertEquals((new GetTime_deCHZH()).getSuperPhrase(), cleanedOutput2, "Essentially after cleaning the highlighting we should be getting back the superphrase");
         });
         assertEquals("", stdErr);
     }
@@ -202,7 +202,7 @@ class CommandLineInterpreterTest {
             var cleanedOutput = stdOut.replaceAll(ansiRegex, "");
             // Remove trailing non-printable characters
             var cleanedOutput2 =  cleanedOutput.replaceAll("[ \t\r\n]+$", "");
-            assertEquals(GetTime.getSuperPhrase(), cleanedOutput2, "Essentially after cleaning the highlighting we should be getting back the superphrase");
+            assertEquals((new GetTime_deCHZH()).getSuperPhrase(), cleanedOutput2, "Essentially after cleaning the highlighting we should be getting back the superphrase");
         });
         assertEquals("", stdErr);
     }
@@ -228,7 +228,7 @@ class CommandLineInterpreterTest {
             var cleanedOutput4 =  cleanedOutput3.replaceAll("\\s+", " ");
             // Remove trailing non-printable characters
             var cleanedOutput5 =  cleanedOutput4.replaceAll("[ \t\r\n]+$", "");
-            assertEquals(GetTime.getSuperPhrase(), cleanedOutput5, "Essentially after cleaning the highlighting we should be getting back the superphrase");
+            assertEquals((new GetTime_deCHZH()).getSuperPhrase(), cleanedOutput5, "Essentially after cleaning the highlighting we should be getting back the superphrase");
 
             var lines = stdOut.split("\r\n|\r|\n");
             assertEquals(5, lines.length, "We expect 5 lines at default line wrapping at col 50");
@@ -257,7 +257,7 @@ class CommandLineInterpreterTest {
             var cleanedOutput4 =  cleanedOutput3.replaceAll("\\s+", " ");
             // Remove trailing non-printable characters
             var cleanedOutput5 =  cleanedOutput4.replaceAll("[ \t\r\n]+$", "");
-            assertEquals(GetTime.getSuperPhrase(), cleanedOutput5, "Essentially after cleaning the highlighting we should be getting back the superphrase");
+            assertEquals((new GetTime_deCHZH()).getSuperPhrase(), cleanedOutput5, "Essentially after cleaning the highlighting we should be getting back the superphrase");
 
             var lines = stdOut.split("\r\n|\r|\n");
             assertEquals(5, lines.length, "We expect 5 lines at default line wrapping at col 50");
@@ -287,7 +287,7 @@ class CommandLineInterpreterTest {
             var cleanedOutput4 =  cleanedOutput3.replaceAll("\\s+", " ");
             // Remove trailing non-printable characters
             var cleanedOutput5 =  cleanedOutput4.replaceAll("[ \t\r\n]+$", "");
-            assertEquals(GetTime.getSuperPhrase(), cleanedOutput5, "Essentially after cleaning the highlighting we should be getting back the superphrase");
+            assertEquals((new GetTime_deCHZH()).getSuperPhrase(), cleanedOutput5, "Essentially after cleaning the highlighting we should be getting back the superphrase");
 
             var lines = stdOut.split("\r\n|\r|\n");
             assertEquals(3, lines.length, "We expect 5 lines at default line wrapping at col 50");

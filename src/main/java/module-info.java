@@ -1,7 +1,6 @@
 module org.richinet {
     requires java.base;
     requires info.picocli;
-    requires java.sql;
     requires system.lambda; // SystemLambda for testing
     exports org.richinet to info.picocli;
 

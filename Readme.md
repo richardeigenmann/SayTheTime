@@ -94,4 +94,166 @@ Biegert & Funk (www.qlocktwo.com ) I felt like doing something similar with word
 
 Side note: check out this cool TCL implementation of the Qlocktwo https://wiki.tcl-lang.org/page/QLOCKTWO+in+Tcl
 
+### Wordhighlight mode
+
+If we had a "superphrase" that had all the words in the right order that 
+are possible for the time phrases then we could show the words that make 
+up the time in a highlight color and those that are not in the phrase in
+a normal text color. Here an example for 13:14 and 13:15:
+
+![Screenshot of wordhighlight mode](doc/wordhighlight.png)
+
+The SayTheTime command line program has some options that you can pass 
+into the command that affect the output. The -h option shows all available
+options:
+
+```ignorelang
+user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime -h
+Usage: SayTheTime [-ahnorsVw] [-c=<wrapCol>] [<suppliedTime>]
+Outputs the time in words on STDOUT
+      [<suppliedTime>]       The time in 24h notation to say. I.e. 13:15
+  -a, --all                  Show all time texts on STDOUT. Can be used in
+                               combinationwith -w or --wordhighlight
+  -c, --wrap-col=<wrapCol>   Which column to wrap at in wrap mode. Default is 50
+  -h, --help                 Show this help message and exit.
+  -n, --no-wrap              Do not wrap the lines
+  -o, --omit-clear           Do not clear the screen in wrap mode
+  -r, --run                  Run forever and refresh every minute
+  -s, --superphrase          Show superphrase. This is the union all merge of
+                               all time phrases that are possible
+  -V, --version              Print version information and exit.
+  -w, --wordhighlight        Word highlight mode
+```
+
+If we turn on -w or --wordhighlight mode a few things happen:
+- The superphrase is printed with the words highlighted. 
+- The terminal screen is cleared so that the text prints at the top of the window.
+- The text is wrapped and block adjusted to 50 columns
+
+For the above example I added the --omit-clear flag so that we can show 
+two times underneath each other.
+
+If we use the --run option we get a clock in the terminal window that 
+refreshes itself every minute until you stop it with ctrl-c:
+
+```bash
+user@computer:~> `/richi/Src/SayTheTime/build/image/bin/SayTheTime --run --wordhighlight
+```
+
+![Screenshot of clock mode mode](doc/runmode.png)
+
+### Superphrase
+
+To make this work we need a "superphrase". You can show the raw superphrase with the `--superphrase option:
+
+```bash
+user@computer:~> `/richi/Src/SayTheTime/build/image/bin/SayTheTime --superphrase
+Es isch fascht foif zäh viertel zwänzg foif über halbi füfezwänzg zwänzg viertel zäh foif vor ab Mitternacht eis zwei drü vieri foifi sächsi sibni achti nüni zäni elfi zwölfi Mittag am Morge Abig gsi
+```
+
+But, how did this phrase come about? First we need to know all the possible time phrases
+that we could encounter. The `--all` option gives us that:
+
+```bash
+user@computer:~> `/richi/Src/SayTheTime/build/image/bin/SayTheTime --all
+Es isch Mitternacht
+Es isch Mitternacht gsi
+Es isch Mitternacht gsi
+Es isch fascht foif ab Mitternacht
+Es isch fascht foif ab Mitternacht
+Es isch foif ab Mitternacht
+Es isch foif ab Mitternacht gsi
+[...]
+Es isch fascht halbi elfi am Abig
+Es isch halbi elfi am Abig
+Es isch halbi elfi am Abig gsi
+Es isch halbi elfi am Abig gsi
+Es isch fascht foif über halbi elfi am Abig
+Es isch fascht foif über halbi elfi am Abig
+Es isch foif über halbi elfi am Abig
+Es isch foif über halbi elfi am Abig gsi
+[...]
+Es isch foif vor zwölfi am Abig
+Es isch foif vor zwölfi am Abig gsi
+Es isch foif vor zwölfi am Abig gsi
+Es isch fascht Mitternacht
+Es isch fascht Mitternacht
+```
+
+To come up with the superphrase we need to merge the lines and remove the words.
+
+#### Merging
+
+Marging the phrases is straight forward. Number the words and copy the words from each 
+index into the superphrase:
+
+```ignorelang
+Es[A0] isch[A1] Mitternacht[A2] gsi[A3]
+Es[B0] isch[B1] fascht[B2] foif[B3] ab[B4] Mitternacht[B5]
+--> Merge
+Es[A0] Es[B0] isch[A1] isch[B1] Mitternacht[A2] fascht[B2] gsi[A3] foif[B3] ab[B4] Mitternacht[B5]
+```
+
+This gives us a superphrase which would work for highlighting the words of each time phrase.
+It just ends up being a bit long, has loads of duplications in it. I.e. the first two words are 
+repeated and `Mitternacht` shows up twice in different places. So we can try to delete words 
+and see if we can still fit all the time texts into the shortened phrase.
+
+#### Deleting words from the superphrase
+
+```ignorelang
+Es[0] Es[1] isch[2] isch[3] Mitternacht[4] fascht[5] gsi[6] foif[7] ab[8] Mitternacht[9]
+```
+
+If we try to delete word 0 from the superphrase can we still fit all phrases into the superphrase?
+
+```ignorelang
+Es[0] isch[2] Mitternacht[4] gsi[6] --> Yes
+Es[0] isch[2] fascht[5] foif[7] ab[8] Mitternacht[9] --> Yes
+```
+
+Thus we end up with a shorter superphrase:
+
+```ignorelang
+Es[0] isch[1] isch[2] Mitternacht[3] fascht[4] gsi[5] foif[6] ab[7] Mitternacht[8]
+```
+
+Now we can try again deleting the first word. But now both time phrases fail: 
+
+```ignorelang
+Superphrase: isch[0] isch[1] Mitternacht[2] fascht[3] gsi[4] foif[5] ab[6] Mitternacht[7]
+Es[not found] isch[2] Mitternacht[4] gsi[6] --> Fail
+Es[not found] isch[2] fascht[5] foif[7] ab[8] Mitternacht[9] --> Fail
+```
+
+We conclude that the first word is nescessary and check the second word. Obviously we will 
+discover that this word can be omitted resulting in the new superphrase:
+
+```ignorelang
+Es[0] isch[1] Mitternacht[2] fascht[3] gsi[4] foif[5] ab[6] Mitternacht[7]
+```
+
+Let's see what happens if we delete the 3rd word:
+
+```ignorelang
+Superphrase: Es[0] isch[1] fascht[2] gsi[3] foif[4] ab[5] Mitternacht[6]
+Es[0] isch[1] Mitternacht[6] gsi[not found] --> Fail
+Es[0] isch[1] fascht[2] foif[4] ab[5] Mitternacht[6] --> Yes
+```
+
+If we apply the logic to the end the shortest superphrase becomes:
+
+```ignorelang
+Es[0] isch[1] Mitternacht[2] fascht[3] gsi[4] foif[5] ab[6] Mitternacht[7]
+```
+
+A human will quickly sport that we can get rid of word 2 if we move word 4 behind word 7.
+This is an algorithm for another day. 
+
+And the current implementation of the word delete test is quite brute-force-inefficient  
+and should be revisited.
+
+
+
+
 
