@@ -184,7 +184,7 @@ To come up with the superphrase we need to merge the lines and remove the words.
 
 #### Merging
 
-Marging the phrases is straight forward. Number the words and copy the words from each 
+Merging the phrases is straight forward. Number the words and copy the words from each 
 index into the superphrase:
 
 ```ignorelang
