@@ -27,7 +27,7 @@ public class CommandLineInterpreter implements Callable<Integer> {
     @Option(names = {"-s", "--superphrase"}, description = "Show superphrase. This is the union all merge of all time phrases that are possible")
     boolean showSuperphrase;
 
-    @Option(names = {"-a", "--all"}, description = "Show all time texts on STDOUT. Can be used in combinationwith -w or --wordhighlight")
+    @Option(names = {"-a", "--all"}, description = "Show all time texts on STDOUT. Can be used in combination with -w or --wordhighlight")
     boolean showAll;
 
     @Option(names = {"-n", "--no-wrap"}, description = "Do not wrap the lines")
