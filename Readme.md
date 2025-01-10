@@ -125,15 +125,15 @@ Outputs the time in words on STDOUT
   -w, --wordhighlight        Word highlight mode
 ```
 
-If we turn on -w or --wordhighlight mode a few things happen:
+If we turn on `-w` or `--wordhighlight` mode a few things happen:
 - The superphrase is printed with the words highlighted. 
 - The terminal screen is cleared so that the text prints at the top of the window.
 - The text is wrapped and block adjusted to 50 columns
 
-For the above example I added the --omit-clear flag so that we can show 
+For the above example I added the `--omit-clear flag so that we can show 
 two times underneath each other.
 
-If we use the --run option we get a clock in the terminal window that 
+If we use the `--run option we get a clock in the terminal window that 
 refreshes itself every minute until you stop it with ctrl-c:
 
 ```bash
