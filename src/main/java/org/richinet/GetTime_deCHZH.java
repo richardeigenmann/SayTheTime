@@ -8,7 +8,7 @@ public class GetTime_deCHZH extends GetTime {
 
     private final static String PREFIX = "Es isch ";
 
-    private final static String[] hours = {"Mitternacht", "eis", "zwei", "drü", "vieri", "foifi",
+    private final static String[] hours = {"zwölfi", "eis", "zwei", "drü", "vieri", "foifi",
             "sächsi", "sibni", "achti", "nüni", "zäni", "elfi"};
 
 
@@ -55,23 +55,27 @@ public class GetTime_deCHZH extends GetTime {
             sb.append("foif ab ");
         }
 
-        if (hour != 12 && !(hour == 24 && minute > 27 && minute < 58)) {
-            sb.append(hours[hour % 12]);
-        }
-
-        if (hour == 24 && minute > 27 && minute < 58) {
-            sb.append("zwölfi");
-        }
-
-        if (hour == 12) {
+        //if (hour != 12 && !(hour == 24 && minute > 27 && minute < 58)) {
+        //if (hour != 12 && !(hour == 24 && minute > 27 && minute < 58)) {
+        if (hour == 0 && minute <3) {
+            sb.append("Mitternacht");
+        } else if (hour == 24 && minute > 57) {
+            sb.append("Mitternacht");
+        } else if (hour == 12 && minute < 3) {
             sb.append("Mittag");
+        } else if (hour == 12 && minute > 57) {
+            sb.append("Mittag");
+        } else {
+            sb.append(hours[hour % 12]);
         }
 
         if (hour > 0 && hour < 11) {
             sb.append(" am Morge");
         }
-        if (hour > 17 && !(hour == 24 && minute > 57)) {
-            sb.append(" am Abig");
+        if (hour > 17 || hour == 0) {
+            if ( ! (hour == 0 && minute <3) && ! (hour == 24 && minute > 57) ) {
+                sb.append(" am Abig");
+            }
         }
 
         if (minute % 5 > 0 && (minute % 5) < 3) {
