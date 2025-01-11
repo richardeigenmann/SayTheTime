@@ -55,8 +55,6 @@ public class GetTime_deCHZH extends GetTime {
             sb.append("foif ab ");
         }
 
-        //if (hour != 12 && !(hour == 24 && minute > 27 && minute < 58)) {
-        //if (hour != 12 && !(hour == 24 && minute > 27 && minute < 58)) {
         if (hour == 0 && minute <3) {
             sb.append("Mitternacht");
         } else if (hour == 24 && minute > 57) {

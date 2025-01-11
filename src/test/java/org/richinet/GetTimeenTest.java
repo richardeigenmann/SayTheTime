@@ -5,20 +5,22 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.richinet.GetTimeTest.loadExpectedResults;
 
-class GetTimedeCHZHTest {
+class GetTimeenTest {
 
-    private static GetTime myTimeProvider = new GetTime_deCHZH();
+    private static GetTime myTimeProvider = new GetTime_en();
 
     @Test
     void compareAllPossibleTimesVsExpectedResults() {
-        loadExpectedResults("de_CHZH-expectedResults.properties").forEach((inputTime, expectedOutput) -> {
+        loadExpectedResults("en-expectedResults.properties").forEach((inputTime, expectedOutput) -> {
             String actualOutput = myTimeProvider.getTime(new Time(inputTime));
             assertEquals(expectedOutput, actualOutput, "The method should return the expected output for input time: " + inputTime);
         });
     }
+
     @Test
     void testSuperphrase() {
         // The superphrase must contain all the words in the right order of the individual phrases

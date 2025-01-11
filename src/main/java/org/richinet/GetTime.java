@@ -20,7 +20,7 @@ public abstract class GetTime {
      */
     public abstract String getSuperPhrase();
 
-    public boolean phraseFitsInSuperphrase(String superphrase, String phrase) {
+    public static boolean phraseFitsInSuperphrase(String superphrase, String phrase) {
         //System.out.println(String.format("is %s part of %s", phrase, superphrase));
         var phraseArray = phrase.split("\\s+"); // split by whitespace
         var superphraseArray = superphrase.split("\\s+"); // split by whitespace
@@ -42,7 +42,7 @@ public abstract class GetTime {
         return true;
     }
 
-    public String merge (String string1, String string2) {
+    public static String merge(String string1, String string2) {
         var string1Array = string1.split("\\s+");
         var string2Array = string2.split("\\s+");
         var mergedString = new ArrayList<String>();

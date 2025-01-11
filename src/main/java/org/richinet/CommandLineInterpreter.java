@@ -1,9 +1,10 @@
 package org.richinet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -17,7 +18,7 @@ import picocli.CommandLine.Parameters;
         description = "Outputs the time in words on STDOUT")
 public class CommandLineInterpreter implements Callable<Integer> {
 
-    public static GetTime myTimeProvider = new GetTime_deCHZH();
+    public static GetTime myTimeProvider;
 
     public static final String ANSI_CLEAR_SCREEN = "\033[H\033[2J";
     @Option(names = {"-w", "--wordhighlight"}, description = "Word highlight mode")
@@ -38,24 +39,34 @@ public class CommandLineInterpreter implements Callable<Integer> {
     @Option(names = {"-c", "--wrap-col"}, description = "Which column to wrap at in wrap mode. Default is ${DEFAULT-VALUE}")
     int wrapCol = 50;
 
-    @Option(names = {"-r", "--run"}, description = "Run forever and refresh every minute")
+    @Option(names = {"-r", "--run"}, description = "Run forever and refresh every 10 seconds")
     boolean runForever;
 
-    // Define an enum for allowed color values
     public enum Color {
         RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHITE;
     }
 
-    // Use the enum as the type for the option
     @Option(names = {"--highlightcolor"}, description = "Highlight Color, if provided, must be one of: ${COMPLETION-CANDIDATES}. Default is ${DEFAULT-VALUE}", required = false)
     private Color color = Color.RED;
+
+    public enum Locale {
+        de_CHZH, en;
+    }
+
+    @Option(names = {"--locale"}, description = "Locale of the language to use, if provided, must be one of: ${COMPLETION-CANDIDATES}. Default is ${DEFAULT-VALUE}", required = false)
+    private Locale locale = Locale.de_CHZH;
 
     @Parameters(index = "0", description = "The time in 24h notation to say. I.e. 13:15", arity = "0..1")
     private String suppliedTime;
 
 
     @Override
-    public Integer call() throws Exception { // your business logic goes here...
+    public Integer call() throws Exception {
+        myTimeProvider = switch (locale) {
+            case de_CHZH -> new GetTime_deCHZH();
+            case en -> new GetTime_en();
+        };
+
         if (showSuperphrase) {
             showSuperphrase();
             return 0;
@@ -130,14 +141,14 @@ public class CommandLineInterpreter implements Callable<Integer> {
     }
 
     public static void runForever(boolean wordHighlightMode, boolean noWrap, boolean omitClear, int wrapCol, Color color) {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        var scheduler = Executors.newScheduledThreadPool(1);
 
-        // Schedule the task to run every 60 seconds
+        // Schedule the task to run every 10 seconds
         Runnable task = () -> {
             showTime( null, wordHighlightMode, noWrap, omitClear, wrapCol, color);
         };
 
-        scheduler.scheduleAtFixedRate(task, 0, 60, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
 
         // Add a shutdown hook to gracefully terminate the scheduler when the program exits
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
