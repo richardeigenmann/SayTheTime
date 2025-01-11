@@ -1,6 +1,5 @@
 package org.richinet;
 
-import java.time.LocalTime;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -42,6 +41,15 @@ public class CommandLineInterpreter implements Callable<Integer> {
     @Option(names = {"-r", "--run"}, description = "Run forever and refresh every minute")
     boolean runForever;
 
+    // Define an enum for allowed color values
+    public enum Color {
+        RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHITE;
+    }
+
+    // Use the enum as the type for the option
+    @Option(names = {"--highlightcolor"}, description = "Highlight Color, if provided, must be one of: ${COMPLETION-CANDIDATES}. Default is ${DEFAULT-VALUE}", required = false)
+    private Color color = Color.RED;
+
     @Parameters(index = "0", description = "The time in 24h notation to say. I.e. 13:15", arity = "0..1")
     private String suppliedTime;
 
@@ -54,14 +62,14 @@ public class CommandLineInterpreter implements Callable<Integer> {
         }
 
         if (showAll) {
-            showAll(wordHighlightMode);
+            showAll(wordHighlightMode, color);
             return 0;
         }
 
         if ( ! runForever ) {
-            showTime(new Time(suppliedTime), wordHighlightMode, noWrap, omitClear, wrapCol);
+            showTime(new Time(suppliedTime), wordHighlightMode, noWrap, omitClear, wrapCol, color);
         } else {
-            runForever(wordHighlightMode, noWrap, omitClear, wrapCol);
+            runForever(wordHighlightMode, noWrap, omitClear, wrapCol, color);
         }
         return 0;
     }
@@ -77,14 +85,14 @@ public class CommandLineInterpreter implements Callable<Integer> {
     /**
      * Prints all possible time values on STDOUT
      */
-    public static void showAll(boolean wordHighlightMode) {
+    public static void showAll(boolean wordHighlightMode, Color color) {
         for (int hour = 0; hour <= 23; hour++) {
             for (int minute = 0; minute <= 59; minute++) {
                 var timeInWords = myTimeProvider.getTime(new Time(hour, minute));
                 if (!wordHighlightMode) {
                     System.out.println(timeInWords);
                 } else {
-                    showTime( new Time(hour, minute), true, true, true, -1);
+                    showTime( new Time(hour, minute), true, true, true, -1, color);
                 }
             }
         }
@@ -100,10 +108,10 @@ public class CommandLineInterpreter implements Callable<Integer> {
      * @param omitClear
      * @param wrapCol
      */
-    private static void showTime(final Time suppliedTime, boolean wordHighlightMode, boolean noWrap, boolean omitClear, int wrapCol) {
+    private static void showTime(final Time suppliedTime, boolean wordHighlightMode, boolean noWrap, boolean omitClear, int wrapCol, Color color) {
         var timeInWords = myTimeProvider.getTime(suppliedTime);
         if (wordHighlightMode) {
-            var highlightedTime = highlightTime(timeInWords, myTimeProvider.getSuperPhrase());
+            var highlightedTime = highlightTime(timeInWords, myTimeProvider.getSuperPhrase(), color);
             if ( noWrap) {
                 System.out.println(highlightedTime);
             } else {
@@ -121,12 +129,12 @@ public class CommandLineInterpreter implements Callable<Integer> {
         }
     }
 
-    public static void runForever(boolean wordHighlightMode, boolean noWrap, boolean omitClear, int wrapCol) {
+    public static void runForever(boolean wordHighlightMode, boolean noWrap, boolean omitClear, int wrapCol, Color color) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
         // Schedule the task to run every 60 seconds
         Runnable task = () -> {
-            showTime( null, wordHighlightMode, noWrap, omitClear, wrapCol);
+            showTime( null, wordHighlightMode, noWrap, omitClear, wrapCol, color);
         };
 
         scheduler.scheduleAtFixedRate(task, 0, 60, TimeUnit.SECONDS);
@@ -167,7 +175,7 @@ public class CommandLineInterpreter implements Callable<Integer> {
     }
 
 
-    private static String highlightTime(String phrase, String superPhrase) {
+    private static String highlightTime(String phrase, String superPhrase, Color color) {
         var superphraseArray = superPhrase.split("\\s+");
         var phraseArray = phrase.split("\\s+");
         var collector = new ArrayList<String>();
@@ -177,7 +185,7 @@ public class CommandLineInterpreter implements Callable<Integer> {
         // visit every word in the superphrase and wrap it in a color if it matches the phrase word
         for (var i = 0; i < superphraseArray.length; i++) {
             if (phraseIndex < phraseArray.length && superphraseArray[i].equals(phraseArray[phraseIndex])) {
-                collector.add(wrapRed(superphraseArray[i]));
+                collector.add(wrapColor(superphraseArray[i], color));
                 phraseIndex++; // advance to the next word in the phrase
             } else {
                 collector.add(superphraseArray[i]);
@@ -197,9 +205,19 @@ public class CommandLineInterpreter implements Callable<Integer> {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
 
+    public static final Map<Color, String> ANSI_COLOR_CODES = Map.of(
+            Color.RED, "\u001B[31m",
+            Color.GREEN, "\u001B[32m",
+            Color.YELLOW, "\u001B[33m",
+            Color.BLUE, "\u001B[34m",
+            Color.PURPLE, "\u001B[35m",
+            Color.CYAN, "\u001B[36m",
+            Color.WHITE, "\u001B[37m"
+    );
 
-    public static String wrapRed(String text) {
-        return (ANSI_RED + text + ANSI_RESET);
+
+    public static String wrapColor(String text, Color color) {
+         return (ANSI_COLOR_CODES.get(color) + text + ANSI_RESET);
     }
 
     public static String wrapWhite(String text) {

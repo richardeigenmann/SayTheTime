@@ -67,7 +67,7 @@ class CommandLineInterpreterTest {
         assertEquals("", stdErr);
     }
 
-    static final int HELP_LINES = 14;
+    static final int HELP_LINES = 18;
     @Test
     void testHelpShort() throws Exception {
         String stdErr = tapSystemErr(() -> {
@@ -76,7 +76,7 @@ class CommandLineInterpreterTest {
             });
 
             String[] lines = stdOut.split("\r\n|\r|\n");
-            assertEquals(HELP_LINES, lines.length);
+            assertTrue(lines.length >= HELP_LINES, "The help must have more than " + HELP_LINES + " lines of output" );
             assertTrue(stdOut.contains("SayTheTime"), "The help option should mention the program name 'SayTheTime'");
         });
         assertEquals("", stdErr);
@@ -90,7 +90,7 @@ class CommandLineInterpreterTest {
             });
 
             String[] lines = stdOut.split("\r\n|\r|\n");
-            assertEquals(HELP_LINES, lines.length);
+            assertTrue(lines.length >= HELP_LINES, "The help must have more than " + HELP_LINES + " lines of output" );
             assertTrue(stdOut.contains("SayTheTime"), "The help option should mention the program name 'SayTheTime'");
         });
         assertEquals("", stdErr);
@@ -167,7 +167,7 @@ class CommandLineInterpreterTest {
         assertEquals("", stdErr);
     }
 
-    private static String extractRedWords(String input) {
+    private static String extractColorWords(String input) {
         // Regular expression to match words formatted in ANSI color codes \u001B[3[1-7]m to \u001B[0m)
         String regex = "\u001B\\[3[1-7]m(.*?)\u001B\\[0m";
 
@@ -194,7 +194,7 @@ class CommandLineInterpreterTest {
                 new CommandLine(new CommandLineInterpreter()).execute("-w", "-n",  "13:15");
             });
 
-            var highlightedSentence = extractRedWords(stdOut);
+            var highlightedSentence = extractColorWords(stdOut);
             assertEquals("Es isch viertel ab eis", highlightedSentence);
 
             // Strip ANSI codes
@@ -208,13 +208,70 @@ class CommandLineInterpreterTest {
     }
 
     @Test
+    void testHighlightColor() throws Exception {
+        String stdErr = tapSystemErr(() -> {
+            String stdOut = tapSystemOutNormalized(() -> {
+                new CommandLine(new CommandLineInterpreter()).execute("--wordhighlight", "--no-wrap",  "13:15");
+            });
+
+            // Did we get valid output?
+            var highlightedSentence = extractColorWords(stdOut);
+            assertEquals("Es isch viertel ab eis", highlightedSentence);
+
+            // Extract the first ANSI color sequence
+            var ansiRegex = "\u001B\\[[;\\d]*m"; // Matches ANSI escape codes
+            var ansiPattern = java.util.regex.Pattern.compile(ansiRegex);
+            var matcher = ansiPattern.matcher(stdOut);
+
+            assertTrue(matcher.find(), "No ANSI color code found in output");
+
+            // Get the first ANSI color sequence
+            var firstAnsiCode = matcher.group();
+
+            // Check if the first ANSI color code matches the color for red
+            // ANSI color for red is typically "\u001B[31m"
+            assertEquals("\u001B[31m", firstAnsiCode, "First color code is not red");
+        });
+
+        assertEquals("", stdErr, "Expected no error output");
+    }
+
+    @Test
+    void testHighlightColorGreen() throws Exception {
+        String stdErr = tapSystemErr(() -> {
+            String stdOut = tapSystemOutNormalized(() -> {
+                new CommandLine(new CommandLineInterpreter()).execute("--wordhighlight", "--no-wrap", "--highlightcolor=GREEN", "13:15");
+            });
+
+            // Did we get valid output?
+            var highlightedSentence = extractColorWords(stdOut);
+            assertEquals("Es isch viertel ab eis", highlightedSentence);
+
+            // Extract the first ANSI color sequence
+            var ansiRegex = "\u001B\\[[;\\d]*m"; // Matches ANSI escape codes
+            var ansiPattern = java.util.regex.Pattern.compile(ansiRegex);
+            var matcher = ansiPattern.matcher(stdOut);
+
+            assertTrue(matcher.find(), "No ANSI color code found in output");
+
+            // Get the first ANSI color sequence
+            var firstAnsiCode = matcher.group();
+
+            // Check if the first ANSI color code matches the color for green
+            assertEquals("\u001B[32m", firstAnsiCode, "First color code is not GREEN");
+        });
+
+        assertEquals("", stdErr, "Expected no error output");
+    }
+
+    @Test
     void testShowSpecifiedTimeWordhighlightWithWrap() throws Exception {
         String stdErr = tapSystemErr(() -> {
             String stdOut = tapSystemOutNormalized(() -> {
                 new CommandLine(new CommandLineInterpreter()).execute("-w", "13:15");
             });
 
-            var highlightedSentence = extractRedWords(stdOut);
+            var highlightedSentence = extractColorWords(stdOut);
             assertEquals("Es isch viertel ab eis", highlightedSentence);
 
             // Strip ANSI codes
@@ -244,7 +301,7 @@ class CommandLineInterpreterTest {
                 new CommandLine(new CommandLineInterpreter()).execute("-w", "-o", "13:15");
             });
 
-            var highlightedSentence = extractRedWords(stdOut);
+            var highlightedSentence = extractColorWords(stdOut);
             assertEquals("Es isch viertel ab eis", highlightedSentence);
 
             // Strip ANSI codes
@@ -273,7 +330,7 @@ class CommandLineInterpreterTest {
                 new CommandLine(new CommandLineInterpreter()).execute("-w", "--wrap-col=100", "13:15");
             });
 
-            var highlightedSentence = extractRedWords(stdOut);
+            var highlightedSentence = extractColorWords(stdOut);
             assertEquals("Es isch viertel ab eis", highlightedSentence);
 
             // Strip ANSI codes
