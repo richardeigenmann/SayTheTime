@@ -103,8 +103,7 @@ public class GetTime_deCHZH extends GetTime {
         sb.append("vor ");
         sb.append("ab ");
         sb.append(String.join(" ", hours));
-        sb.append(" zwölfi ");
-        sb.append("Mittag");
+        sb.append(" Mittag Mitternacht");
         sb.append(" am ");
         sb.append("Morge ");
         sb.append("Abig");
