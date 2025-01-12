@@ -352,5 +352,38 @@ class CommandLineInterpreterTest {
         });
         assertEquals("", stdErr);
     }
+    @Test
+    void testRunForever() throws Exception {
+        // Capture standard error and output
+        String stdErr = tapSystemErr(() -> {
+            String stdOut = tapSystemOutNormalized(() -> {
+                // Create a separate thread to execute the command
+                Thread commandThread = new Thread(() -> {
+                    new CommandLine(new CommandLineInterpreter()).execute("--wordhighlight", "--no-wrap", "--no-clear", "--run");
+                });
+
+                // Start the command thread
+                commandThread.start();
+
+                // Wait for 1 second
+                Thread.sleep(1000);
+
+                // Interrupt the thread to simulate sending SIGKILL
+                commandThread.interrupt();
+
+                // Wait for the thread to terminate
+                commandThread.join(1000);
+
+                // Assert that the thread is no longer alive (terminated successfully)
+                assertFalse(commandThread.isAlive());
+            });
+
+            // make sure we got some output
+            assertTrue(stdOut.startsWith("\u001B[31mEs\u001B[0m \u001B[31misch\u001B[0m"), "Assert that we got Es isch in the German output");
+        });
+
+        // Ensure no error output
+        assertEquals("", stdErr);
+    }
 
 }

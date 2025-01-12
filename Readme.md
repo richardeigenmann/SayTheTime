@@ -109,16 +109,23 @@ options:
 
 ```ignorelang
 user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime -h
-Usage: SayTheTime [-ahnorsVw] [-c=<wrapCol>] [<suppliedTime>]
+sage: SayTheTime [-ahnorsVw] [-c=<wrapCol>] [--highlightcolor=<color>]
+                  [--locale=<locale>] [<suppliedTime>]
 Outputs the time in words on STDOUT
       [<suppliedTime>]       The time in 24h notation to say. I.e. 13:15
   -a, --all                  Show all time texts on STDOUT. Can be used in
-                               combinationwith -w or --wordhighlight
+                               combination with -w or --wordhighlight
   -c, --wrap-col=<wrapCol>   Which column to wrap at in wrap mode. Default is 50
   -h, --help                 Show this help message and exit.
+      --highlightcolor=<color>
+                             Highlight Color, if provided, must be one of: RED,
+                               GREEN, BLUE, YELLOW, CYAN, PURPLE, WHITE.
+                               Default is RED
+      --locale=<locale>      Locale of the language to use, if provided, must
+                               be one of: de_CHZH, en. Default is de_CHZH
   -n, --no-wrap              Do not wrap the lines
-  -o, --omit-clear           Do not clear the screen in wrap mode
-  -r, --run                  Run forever and refresh every minute
+  -o, --no-clear             Do not clear the screen in wrap mode
+  -r, --run                  Run forever and refresh every 10 seconds
   -s, --superphrase          Show superphrase. This is the union all merge of
                                all time phrases that are possible
   -V, --version              Print version information and exit.
@@ -130,7 +137,7 @@ If we turn on `-w` or `--wordhighlight` mode a few things happen:
 - The terminal screen is cleared so that the text prints at the top of the window.
 - The text is wrapped and block adjusted to 50 columns
 
-For the above example I added the `--omit-clear` flag so that we can show 
+For the above example I added the `--no-clear` flag so that we can show 
 two times underneath each other.
 
 If we use the `--run` option we get a clock in the terminal window that 

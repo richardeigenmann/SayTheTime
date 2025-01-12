@@ -33,7 +33,7 @@ public class CommandLineInterpreter implements Callable<Integer> {
     @Option(names = {"-n", "--no-wrap"}, description = "Do not wrap the lines")
     boolean noWrap;
 
-    @Option(names = {"-o", "--omit-clear"}, description = "Do not clear the screen in wrap mode")
+    @Option(names = {"-o", "--no-clear"}, description = "Do not clear the screen in wrap mode")
     boolean omitClear;
 
     @Option(names = {"-c", "--wrap-col"}, description = "Which column to wrap at in wrap mode. Default is ${DEFAULT-VALUE}")
@@ -145,7 +145,7 @@ public class CommandLineInterpreter implements Callable<Integer> {
 
         // Schedule the task to run every 10 seconds
         Runnable task = () -> {
-            showTime( null, wordHighlightMode, noWrap, omitClear, wrapCol, color);
+            showTime( new Time(""), wordHighlightMode, noWrap, omitClear, wrapCol, color);
         };
 
         scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
