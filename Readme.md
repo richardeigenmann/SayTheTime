@@ -18,6 +18,12 @@ user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15
 Es isch viertel ab eis
 ```
 
+If you don't understand Swiss German as spoken in Z&uuml;rich:
+```ignorelang
+user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime --locale=en
+It is almost quarter to eleven
+```
+
 ## Use it with cowsay
 
 On Linux you can install the program cowsay and use that to let the cow say the time:
@@ -60,10 +66,10 @@ the output of that command and pass it as an argument
 to the `cowsay` program. Here with the ghostbusters 'cow':
 
 ```ignorelang
-user@computer:~> cowsay -f ghostbusters $(/richi/Src/SayTheTime/build/image/bin/SayTheTime)
- __________________________________ 
-< Es isch foif über halbi eis gsi >
- ---------------------------------- 
+user@computer:~> cowsay -f ghostbusters $(/richi/Src/SayTheTime/build/image/bin/SayTheTime --locale=en 00:00)
+  ________________ 
+< It is midnight >
+ ---------------- 
           \
            \
             \          __---__
