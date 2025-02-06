@@ -8,6 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -18,7 +19,7 @@ import picocli.CommandLine.Parameters;
         description = "Outputs the time in words on STDOUT")
 public class CommandLineInterpreter implements Callable<Integer> {
 
-    public static GetTime myTimeProvider;
+    private static GetTime myTimeProvider;
 
     public static final String ANSI_CLEAR_SCREEN = "\033[H\033[2J";
     @Option(names = {"-w", "--wordhighlight"}, description = "Word highlight mode")
@@ -41,6 +42,9 @@ public class CommandLineInterpreter implements Callable<Integer> {
 
     @Option(names = {"-r", "--run"}, description = "Run forever and refresh every 10 seconds")
     boolean runForever;
+
+    @Option(names = {"--json"}, description = "Output time as a JSON", defaultValue = "false")
+    boolean json;
 
     public enum Color {
         RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHITE;
@@ -68,12 +72,17 @@ public class CommandLineInterpreter implements Callable<Integer> {
         };
 
         if (showSuperphrase) {
-            showSuperphrase();
+            showSuperphrase( json );
             return 0;
         }
 
         if (showAll) {
             showAll(wordHighlightMode, color);
+            return 0;
+        }
+
+        if ( json ) {
+            outputJson(new Time(suppliedTime));
             return 0;
         }
 
@@ -85,12 +94,20 @@ public class CommandLineInterpreter implements Callable<Integer> {
         return 0;
     }
 
+
     /**
      * Prints the superphrase which is the union all merge of
      * all time phrases that are possible on STDOUT.
      */
-    private static void showSuperphrase() {
-        System.out.println(myTimeProvider.getSuperPhrase());
+    private static void showSuperphrase( boolean json ) {
+        final var superPhrase = myTimeProvider.getSuperPhrase();
+        if ( json ) {
+            final var jsonObject = new JSONObject();
+            jsonObject.put("superphrase", superPhrase);
+            System.out.println(jsonObject.toString(4)); // pretty print
+        } else {
+            System.out.println(superPhrase);
+        }
     }
 
     /**
@@ -144,9 +161,7 @@ public class CommandLineInterpreter implements Callable<Integer> {
         var scheduler = Executors.newScheduledThreadPool(1);
 
         // Schedule the task to run every 10 seconds
-        Runnable task = () -> {
-            showTime( new Time(""), wordHighlightMode, noWrap, omitClear, wrapCol, color);
-        };
+        Runnable task = () -> showTime( new Time(""), wordHighlightMode, noWrap, omitClear, wrapCol, color);
 
         scheduler.scheduleAtFixedRate(task, 0, 10, TimeUnit.SECONDS);
 
@@ -217,13 +232,13 @@ public class CommandLineInterpreter implements Callable<Integer> {
     public static final String ANSI_WHITE = "\u001B[37m";
 
     public static final Map<Color, String> ANSI_COLOR_CODES = Map.of(
-            Color.RED, "\u001B[31m",
-            Color.GREEN, "\u001B[32m",
-            Color.YELLOW, "\u001B[33m",
-            Color.BLUE, "\u001B[34m",
-            Color.PURPLE, "\u001B[35m",
-            Color.CYAN, "\u001B[36m",
-            Color.WHITE, "\u001B[37m"
+            Color.RED, ANSI_RED,
+            Color.GREEN, ANSI_GREEN,
+            Color.YELLOW, ANSI_YELLOW,
+            Color.BLUE, ANSI_BLUE,
+            Color.PURPLE, ANSI_PURPLE,
+            Color.CYAN, ANSI_CYAN,
+            Color.WHITE, ANSI_WHITE
     );
 
 
@@ -268,7 +283,7 @@ public class CommandLineInterpreter implements Callable<Integer> {
         int spaceBetweenWords = totalSpaces / (words.size() - 1);
         int extraSpaces = totalSpaces % (words.size() - 1);
 
-        StringBuilder justifiedLine = new StringBuilder();
+        final var justifiedLine = new StringBuilder();
         for (int i = 0; i < words.size(); i++) {
             justifiedLine.append(words.get(i));
             if (i < words.size() - 1) {
@@ -286,6 +301,15 @@ public class CommandLineInterpreter implements Callable<Integer> {
 
     private static String padRight(String word, int width) {
         return word + " ".repeat(width - visibleLength(word));
+    }
+
+    private static void outputJson(Time time) {
+        final var json = new JSONObject();
+        var timeInWords = myTimeProvider.getTime(time);
+        json.put("time", timeInWords);
+
+        //System.out.println(json.toString()); // Compact JSON
+        System.out.println(json.toString(4)); // pretty print
     }
 
 }
