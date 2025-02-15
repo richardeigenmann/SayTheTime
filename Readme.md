@@ -1,18 +1,35 @@
 # SayTheTime
 
-A JAVA program that says the time in words
-
 <img src="https://img.shields.io/badge/java-%23ED8B00.svg?&style=for-the-badge&logo=java&logoColor=white"
-/> <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"
+/> <img src="https://badgen.net/badge/java/modularity/blue?icon=java"
+/> <img src="https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white"
+/> <img src="https://camo.githubusercontent.com/bf41a7819096e3ebc3ab4acb45507a92ecf822ff2926a2b9d70cd147d7afd06f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6a756e69742d6a7570697465722d677265656e2e737667"
+/>  <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"
 /> <img src="https://img.shields.io/badge/openSUSE-%2364B345?style=for-the-badge&logo=openSUSE&logoColor=white"
 /> <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white"
 /> <a href="https://github.com/richardeigenmann/SayTheTime"> <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/>
 </a> <a href="mailto:richard.eigenmann@gmail.com"> <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/></a>
 
-## Simplest use case: Output onto the Command Line
+A small Java program that says the time in words in Swiss German or English on the command line. 
+It took some inspiration from the Qlocktwo wall clock by Biegert & Funk (www.qlocktwo.com).
+It can be used in conjunction with STDIN readers to do some fun things like having a cow say the time. 
 
-After installing the program, run it on the command line and 
-it will say the current time. Here is a Linux BASH example:
+It was built on modern `Java` using the `Gradle` build system and the `Java Module System`. Using `jlink` it
+can be packaged into a small runtime image. The [picocli](https://picocli.info) library was used for the command line interface.
+
+Please use this as a starting point for your owm Java Gradle Modularity projects or a text generator for
+some cool application. 
+
+Contributions, for instance more languages, are welcome.
+
+Have Fun!
+
+## What you can do with it
+
+### Simplest use case: Output onto the Command Line
+
+After installing the program, run it on the command line. 
+It will output the current time. Here is a Linux BASH example:
 
 ```ignorelang
 user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime
@@ -31,9 +48,10 @@ user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime --locale=en
 It is almost quarter to eleven
 ```
 
-## Use it with cowsay
+### Use it with cowsay
 
-On Linux you can install the program cowsay and use that to let the cow say the time:
+On Linux you can install the program cowsay which puts the text you supply into
+a comic style text buble. Here's how to let the cow say the time:
 
 ```ignorelang
 user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | cowsay
@@ -100,14 +118,14 @@ user@computer:~> cowsay -f ghostbusters $(/richi/Src/SayTheTime/build/image/bin/
                   ""VXXXXXXXXXXXXXXXXXXV""
 ```
 
-## The Qlocktwo inspiration
+### The Qlocktwo inspiration
 
 Having admired the beautiful Qlocktwo wall clocks made by 
 Biegert & Funk (www.qlocktwo.com ) I felt like doing something similar with words.
 
 Side note: check out this cool TCL implementation of the Qlocktwo https://wiki.tcl-lang.org/page/QLOCKTWO+in+Tcl
 
-### Wordhighlight mode
+#### Wordhighlight mode
 
 If we had a "superphrase" that had all the words in the right order that 
 are possible for the time phrases then we could show the words that make 
@@ -162,7 +180,7 @@ user@computer:~> `/richi/Src/SayTheTime/build/image/bin/SayTheTime --run --wordh
 
 ![Screenshot of clock mode mode](doc/runmode.png)
 
-### Superphrase
+#### Superphrase
 
 To make this work we need a "superphrase". You can show the raw superphrase with the `--superphrase option:
 
@@ -274,6 +292,27 @@ And the current implementation of the word delete test is quite brute-force-inef
 and should be revisited.
 
 
+# How to build it
 
+Instructions need to be tested....
 
+```bash
+# First clone the project from Github:
+git clone https://github.com/richardeigenmann/SayTheTime.git
+cd SayTheTime
 
+# now fire up your favorite IDE and import the project as a Gradle project and 
+# let it run the build for you
+
+# or build it on the command line with Gradle (which you have to install first)
+gradle build
+
+# or use the self-contained Gradle wrapper
+./gradlew build
+
+# for Windows: 
+gradlew.bat build
+```
+
+Please mail me if you have any questions or suggestions.
+richard.eigenmann@gmail.com
