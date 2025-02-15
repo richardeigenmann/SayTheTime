@@ -7,6 +7,7 @@
 />  <img src="https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black"
 /> <img src="https://img.shields.io/badge/openSUSE-%2364B345?style=for-the-badge&logo=openSUSE&logoColor=white"
 /> <img src="https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white"
+/> <img src="https://img.shields.io/badge/license-MIT-blue"
 /> <a href="https://github.com/richardeigenmann/SayTheTime"> <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"/>
 </a> <a href="mailto:richard.eigenmann@gmail.com"> <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/></a>
 
@@ -316,3 +317,19 @@ gradlew.bat build
 
 Please mail me if you have any questions or suggestions.
 richard.eigenmann@gmail.com
+
+# License
+
+I have licensed this project under the MIT license. Please see the LICENSE file for details.
+
+Please take note of the licenses of the libraries used in this project declared in the build.gradle file:
+
+- Picocli is licensed under the Apache 2.0 license.
+- System-Lambda is licensed under the MIT license.
+- JUnit 5 is licensed under the Eclipse Public License 2.0.
+- JUnit Platform is licensed under the Eclipse Public License 2.0.
+- Json is licensed under the MIT license.
+- Ben Manes' Versions Plugin is licensed under the Apache 2.0 license.
+- Beryx Runtime Plugin is licensed under the Apache 2.0 license.
+
+TODO: Check that Copilot got this right....
