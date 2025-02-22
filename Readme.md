@@ -119,6 +119,68 @@ user@computer:~> cowsay -f ghostbusters $(/richi/Src/SayTheTime/build/image/bin/
                   ""VXXXXXXXXXXXXXXXXXXV""
 ```
 
+### Use it with figlet
+
+figlet is a Linux program that prints text in large letters made up of ordinary characters. 
+Use it to say the time:
+
+```ignorelang
+user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | figlet -w200
+ _____       _          _             _           _       _         _            _     
+| ____|___  (_)___  ___| |__   __   _(_) ___ _ __| |_ ___| |   __ _| |__     ___(_)___ 
+|  _| / __| | / __|/ __| '_ \  \ \ / / |/ _ \ '__| __/ _ \ |  / _` | '_ \   / _ \ / __|
+| |___\__ \ | \__ \ (__| | | |  \ V /| |  __/ |  | ||  __/ | | (_| | |_) | |  __/ \__ \
+|_____|___/ |_|___/\___|_| |_|   \_/ |_|\___|_|   \__\___|_|  \__,_|_.__/   \___|_|___/
+```
+
+figlet comes with a set of fonts. To try each of them out use the -f option. Here is a script I 
+asked DeepSeek to create for me that does just that:
+
+```bash
+for font in /usr/share/figlet/*.flf; do font_name=$(basename "$font" .flf); echo "Using font: $font_name"; richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | figlet -w200 -f "$font_name"; echo -e "\n----------------------------------------\n"; done
+```
+
+### Use it with toilet
+
+toilet is another Linux program that prints text in large letters made up of ordinary characters.
+
+```ignorelang
+user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | toilet -w 200  ;/richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | toilet -w 200 -F flop
+                                                                                                                                                          
+ mmmmmm                 "                  #                      "                    m           ""#                  #                      "          
+ #       mmm          mmm     mmm    mmm   # mm          m   m  mmm     mmm    m mm  mm#mm   mmm     #            mmm   #mmm           mmm   mmm     mmm  
+ #mmmmm #   "           #    #   "  #"  "  #"  #         "m m"    #    #"  #   #"  "   #    #"  #    #           "   #  #" "#         #"  #    #    #   " 
+ #       """m           #     """m  #      #   #          #m#     #    #""""   #       #    #""""    #           m"""#  #   #         #""""    #     """m 
+ #mmmmm "mmm"         mm#mm  "mmm"  "#mm"  #   #           #    mm#mm  "#mm"   #       "mm  "#mm"    "mm         "mm"#  ##m#"         "#mm"  mm#mm  "mmm" 
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+ #ɯɯɯɯɯ „ɯɯɯ„         ɯɯ#ɯɯ  „ɯɯɯ„  „#ɯɯ„  #   #           #    ɯɯ#ɯɯ  „#ɯɯ„   #       „ɯɯ  „#ɯɯ„    „ɯɯ         „ɯɯ„#  ##ɯ#„         „#ɯɯ„  ɯɯ#ɯɯ  „ɯɯɯ„ 
+ #       „„„ɯ           #     „„„ɯ  #      #   #          #ɯ#     #    #„„„„   #       #    #„„„„    #           ɯ„„„#  #   #         #„„„„    #     „„„ɯ 
+ #ɯɯɯɯɯ #   „           #    #   „  #„  „  #„  #         „ɯ ɯ„    #    #„  #   #„  „   #    #„  #    #           „   #  #„ „#         #„  #    #    #   „ 
+ #       ɯɯɯ          ɯɯɯ     ɯɯɯ    ɯɯɯ   # ɯɯ          ɯ   ɯ  ɯɯɯ     ɯɯɯ    ɯ ɯɯ  ɯɯ#ɯɯ   ɯɯɯ     #            ɯɯɯ   #ɯɯɯ           ɯɯɯ   ɯɯɯ     ɯɯɯ  
+ ɯɯɯɯɯɯ                 „                  #                      „                    ɯ           „„#                  #                      „          
+```
+
+Toilet has nice color options which don't show up here. Check them with `toilet -F gay' or 'toilet -F metal' for instance.
+
+Here is with a border:
+
+```ignorelang
+user@computer:~> /richi/Src/SayTheTime/build/image/bin/SayTheTime 13:15 | toilet -w 200 -F border
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                                                                                                                                          │
+│ mmmmmm                 "                  #                      "                    m           ""#                  #                      "          │
+│ #       mmm          mmm     mmm    mmm   # mm          m   m  mmm     mmm    m mm  mm#mm   mmm     #            mmm   #mmm           mmm   mmm     mmm  │
+│ #mmmmm #   "           #    #   "  #"  "  #"  #         "m m"    #    #"  #   #"  "   #    #"  #    #           "   #  #" "#         #"  #    #    #   " │
+│ #       """m           #     """m  #      #   #          #m#     #    #""""   #       #    #""""    #           m"""#  #   #         #""""    #     """m │
+│ #mmmmm "mmm"         mm#mm  "mmm"  "#mm"  #   #           #    mm#mm  "#mm"   #       "mm  "#mm"    "mm         "mm"#  ##m#"         "#mm"  mm#mm  "mmm" │
+│                                                                                                                                                          │
+│                                                                                                                                                          │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ### The Qlocktwo inspiration
 
 Having admired the beautiful Qlocktwo wall clocks made by 
