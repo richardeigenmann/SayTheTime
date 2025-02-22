@@ -386,12 +386,10 @@ I have licensed this project under the MIT license. Please see the LICENSE file 
 
 Please take note of the licenses of the libraries used in this project declared in the build.gradle file:
 
-- Picocli is licensed under the Apache 2.0 license.
-- System-Lambda is licensed under the MIT license.
-- JUnit 5 is licensed under the Eclipse Public License 2.0.
-- JUnit Platform is licensed under the Eclipse Public License 2.0.
-- Json is licensed under the MIT license.
-- Ben Manes' Versions Plugin is licensed under the Apache 2.0 license.
-- Beryx Runtime Plugin is licensed under the Apache 2.0 license.
-
-TODO: Check that Copilot got this right....
+- Picocli is licensed under the Apache 2.0 license. (https://picocli.info/#_license)
+- System-Lambda is licensed under the MIT license. (https://github.com/stefanbirkner/system-lambda/blob/master/LICENSE)
+- JUnit is licensed under the Eclipse Public License 2.0. (https://github.com/junit-team/junit5/blob/main/LICENSE.md)
+- Json is licensed under its own public license. (https://www.json.org/license.html)
+- Ben Manes' Versions Plugin is licensed under the Apache 2.0 license. (https://github.com/ben-manes/gradle-versions-plugin/blob/master/LICENSE.txt)
+- Beryx Runtime Plugin is licensed under the Apache 2.0 license. (https://github.com/beryx/badass-runtime-plugin/blob/master/LICENSE)
+- Gradle is licensed under the Apache 2.0 license. (https://github.com/gradle/gradle/blob/master/LICENSE)
