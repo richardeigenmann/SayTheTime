@@ -1,8 +1,6 @@
-package org.richinet;
+package org.richinet.saythetime.lib;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import org.richinet.Time;
 
 public class GetTime_deCHZH extends GetTime {
 
@@ -19,7 +17,7 @@ public class GetTime_deCHZH extends GetTime {
 
         var sb = new StringBuilder(PREFIX);
 
-        if (minute % 5 > 2 && minute % 5 < 5) {
+        if (minute % 5 > 2) {
             sb.append("fascht ");
         }
 

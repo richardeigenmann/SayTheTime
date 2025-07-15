@@ -1,4 +1,6 @@
-package org.richinet;
+package org.richinet.saythetime.lib;
+
+import org.richinet.Time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +81,6 @@ public abstract class GetTime {
         var allTimes = new ArrayList<String>();
         for (int h = 0; h <= 23; h++) {
             for (int m = 0; m <= 59; m++) {
-                String time = String.format("%02d:%02d", h, m);
                 allTimes.add( this.getTime(new Time(h,m)));
             }
         }
@@ -99,7 +100,7 @@ public abstract class GetTime {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < words.length; i++) {
             if (i != n) {
-                if (result.length() > 0) {
+                if (!result.isEmpty()) {
                     result.append(" ");
                 }
                 result.append(words[i]);

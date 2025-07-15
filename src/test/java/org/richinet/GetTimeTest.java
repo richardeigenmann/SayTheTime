@@ -1,10 +1,10 @@
 package org.richinet;
 
 import org.junit.jupiter.api.Test;
+import org.richinet.saythetime.lib.GetTime;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
 

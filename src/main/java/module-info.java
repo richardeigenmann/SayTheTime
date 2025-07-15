@@ -5,5 +5,7 @@ module org.richinet {
     requires org.json; // SystemLambda for testing
     exports org.richinet to info.picocli;
 
-    opens org.richinet to info.picocli, org.junit.platform.commons; // Allow JUnit and picocli reflection
+    opens org.richinet to info.picocli;
+    exports org.richinet.saythetime.lib to info.picocli;
+    opens org.richinet.saythetime.lib to info.picocli; // Allow picocli reflection
 }

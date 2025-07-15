@@ -1,6 +1,7 @@
 package org.richinet;
 
 import org.junit.jupiter.api.Test;
+import org.richinet.saythetime.lib.GetTime_deCHZH;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
@@ -184,7 +185,7 @@ class CommandLineInterpreterTest {
             redWords.add(matcher.group(1).trim());
         }
 
-        return redWords.stream().collect(Collectors.joining(" "));
+        return String.join(" ", redWords);
     }
 
     @Test

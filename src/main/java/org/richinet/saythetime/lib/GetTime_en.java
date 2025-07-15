@@ -1,4 +1,6 @@
-package org.richinet;
+package org.richinet.saythetime.lib;
+
+import org.richinet.Time;
 
 public class GetTime_en extends GetTime {
 

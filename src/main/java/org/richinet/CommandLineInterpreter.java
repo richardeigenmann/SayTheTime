@@ -9,6 +9,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.json.JSONObject;
+import org.richinet.saythetime.lib.GetTime;
+import org.richinet.saythetime.lib.GetTime_deCHZH;
+import org.richinet.saythetime.lib.GetTime_en;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -47,25 +50,25 @@ public class CommandLineInterpreter implements Callable<Integer> {
     boolean json;
 
     public enum Color {
-        RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHITE;
+        RED, GREEN, BLUE, YELLOW, CYAN, PURPLE, WHITE
     }
 
     @Option(names = {"--highlightcolor"}, description = "Highlight Color, if provided, must be one of: ${COMPLETION-CANDIDATES}. Default is ${DEFAULT-VALUE}", required = false)
     private Color color = Color.RED;
 
     public enum Locale {
-        de_CHZH, en;
+        de_CHZH, en
     }
 
     @Option(names = {"--locale"}, description = "Locale of the language to use, if provided, must be one of: ${COMPLETION-CANDIDATES}. Default is ${DEFAULT-VALUE}", required = false)
-    private Locale locale = Locale.de_CHZH;
+    private final Locale locale = Locale.de_CHZH;
 
     @Parameters(index = "0", description = "The time in 24h notation to say. I.e. 13:15", arity = "0..1")
     private String suppliedTime;
 
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         myTimeProvider = switch (locale) {
             case de_CHZH -> new GetTime_deCHZH();
             case en -> new GetTime_en();
