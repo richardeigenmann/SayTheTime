@@ -1,7 +1,5 @@
 package org.richinet.saythetime.lib;
 
-import org.richinet.Time;
-
 public class GetTime_deCHZH extends GetTime {
 
     private final static String PREFIX = "Es isch ";

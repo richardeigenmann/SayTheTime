@@ -1,6 +1,7 @@
 package org.richinet;
 
 import org.junit.jupiter.api.Test;
+import org.richinet.saythetime.lib.Time;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,4 +1,4 @@
-package org.richinet;
+package org.richinet.saythetime.lib;
 
 import java.time.LocalTime;
 

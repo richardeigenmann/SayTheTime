@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.richinet.saythetime.lib.GetTime;
 import org.richinet.saythetime.lib.GetTime_deCHZH;
 import org.richinet.saythetime.lib.GetTime_en;
+import org.richinet.saythetime.lib.Time;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;

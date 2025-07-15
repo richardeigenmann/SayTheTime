@@ -3,6 +3,7 @@ package org.richinet;
 import org.junit.jupiter.api.Test;
 import org.richinet.saythetime.lib.GetTime;
 import org.richinet.saythetime.lib.GetTime_en;
+import org.richinet.saythetime.lib.Time;
 
 import java.util.*;
 
