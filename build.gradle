@@ -1,13 +1,13 @@
 plugins {
     id "java"
     id 'application'
-    id "com.github.ben-manes.versions" version "0.52.0" // dependency updates
+    id "com.github.ben-manes.versions" version "0.53.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
-    id 'org.beryx.jlink' version '3.1.1' // add jlink packaging support
-    id "org.javamodularity.moduleplugin" version "1.8.15" // add java modularity support
+    id 'org.beryx.jlink' version '3.1.4-rc' // add jlink packaging support
+    id "org.javamodularity.moduleplugin" version "2.0.0" // add java modularity support
     //id "org.sonarqube" version "5.0.0.4638"
     id 'jacoco' // coverage reports
-    id "com.gradleup.shadow" version "9.0.0-rc1"  // make uber (fat) jar
+    id "com.gradleup.shadow" version "9.3.0"  // make uber (fat) jar
 }
 
 group = "org.richinet"
@@ -21,8 +21,8 @@ dependencies {
     implementation 'info.picocli:picocli:4.7.7'  // for handling command line arguments
     annotationProcessor 'info.picocli:picocli-codegen:4.7.7'
     implementation 'com.github.stefanbirkner:system-lambda:1.2.1'
-    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.0-M1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.0-M1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.1.0-M1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.1.0-M1'
     implementation 'org.json:json:20250517'
 }
 
